@@ -1,0 +1,28 @@
+name: Portfolio simulation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run tests
+        run: python -m pytest -q
+      - name: Run lightweight experiment
+        run: python simulation.py --years 5 --simulations 500 --run-name ci-${{ github.run_id }}
+      - name: Upload research results
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-simulation-${{ github.run_id }}
+          path: results/runs/ci-${{ github.run_id }}/
+          if-no-files-found: error
