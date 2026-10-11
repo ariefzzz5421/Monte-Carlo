@@ -1,12 +1,17 @@
 """Vectorized correlated GBM with month-end optional rebalancing."""
 
 import numpy as np
+from collections.abc import Callable
 
 from src.config import Config
 from src.portfolio import rebalance, should_rebalance
 
 
-def simulate(config: Config, max_years: int = 10) -> np.ndarray:
+def simulate(
+    config: Config,
+    max_years: int = 10,
+    progress_callback: Callable[[int, int], None] | None = None,
+) -> np.ndarray:
     """Return portfolio values shaped (scenarios, months + 1).
 
     The configured annual return is an expected *simple* one-year return.
@@ -33,6 +38,8 @@ def simulate(config: Config, max_years: int = 10) -> np.ndarray:
         paths[:, month] = holdings.sum(axis=1)
         if should_rebalance(month, config.rebalancing):
             holdings = rebalance(holdings, np.asarray(config.weights))
+        if progress_callback is not None:
+            progress_callback(month, months)
     if not np.all(np.isfinite(paths)) or np.any(paths < 0):
         raise ValueError("simulation overflowed; choose less extreme assumptions")
     return paths

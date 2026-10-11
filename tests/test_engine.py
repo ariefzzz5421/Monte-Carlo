@@ -26,3 +26,18 @@ def test_perfect_correlation_is_supported(config):
     identical = replace(config, correlation=((1., 1., 1.),) * 3)
     paths = simulate(identical, max_years=1)
     assert np.isfinite(paths).all()
+
+
+def test_progress_reports_completed_months_without_changing_results(config):
+    progress = []
+    baseline = simulate(config, max_years=1)
+    observed = simulate(config, max_years=1, progress_callback=lambda done, total: progress.append((done, total)))
+    np.testing.assert_array_equal(observed, baseline)
+    assert progress == [(month, 12) for month in range(1, 13)]
+
+
+def test_progress_callback_is_not_called_before_first_completed_step(config):
+    seen = []
+    simulate(config, max_years=1, progress_callback=lambda done, total: seen.append(done))
+    assert seen[0] == 1
+    assert seen[-1] == 12

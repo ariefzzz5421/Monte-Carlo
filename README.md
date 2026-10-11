@@ -1,6 +1,6 @@
 # Portfolio Monte Carlo Lab
 
-A local Python research simulator for a three-asset portfolio: Bitcoin (BTC), the S&P 500, and Gold. It uses hypothetical inputs and generates reproducible scenario paths, statistics, CSV files, and PNG charts. **Educational research tool only; not financial advice or a real-world forecast.** No accounts, APIs, keys, or web app are needed.
+A local Python research simulator for a three-asset portfolio: Bitcoin (BTC), the S&P 500, and Gold. It has an interactive Streamlit + Plotly dashboard and retains the original command-line interface (CLI). Both use the same GBM engine and produce reproducible statistics, CSV files, JSON, and PNG charts. **Educational research tool only; not financial advice or a real-world forecast.** No accounts, external APIs, keys, or hosted service are needed.
 
 ## Start in Windows PowerShell
 
@@ -12,12 +12,27 @@ cd Monte-Carlo
 py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
+python -m streamlit run dashboard.py
+```
+
+Streamlit prints a local URL, normally `http://localhost:8501`; open it in your browser. If PowerShell blocks script activation, run `.\.venv\Scripts\python.exe -m pip install -r requirements.txt` and `.\.venv\Scripts\python.exe -m streamlit run dashboard.py` directly. In VS Code or Cursor, open the repository folder and select `.venv\Scripts\python.exe` as the interpreter. On macOS/Linux, use `python3 -m venv .venv`, `source .venv/bin/activate`, then the same `python -m streamlit run dashboard.py` command.
+
+## Use the dashboard
+
+1. Set capital, the three weights, annual expected returns, volatility, pairwise correlations, 100–100,000 scenarios, selected horizon, rebalancing, and seed in the sidebar. Weights must total 100%, and the correlation matrix must be mathematically valid.
+2. Select **Run Simulation**. The computation bar reports completed monthly steps of the actual 10-year path calculation. The 1Y/5Y/10Y comparison uses that one shared calculation. After it finishes, the app writes the normal JSON, CSV, and PNG outputs.
+3. Use **Play**, **Pause**, **Reset**, speed, and the timeline slider to replay *completed* scenario paths. Playback does not run more simulations. At most 100 paths are drawn; metrics and distributions use every scenario.
+4. Inspect the outcome, risk, and horizon tabs. Download an individual JSON, CSV, or PNG, or a ZIP containing the full original output structure.
+
+The dashboard starts idle and computes only after you press the button. If a configuration is invalid, it explains the problem and leaves the last successful result available. Its dark layout uses full-width charts and a sidebar that can collapse on narrow screens.
+
+### Keep using the CLI
+
+```powershell
 python simulation.py
 ```
 
-If PowerShell blocks script activation, run `.\.venv\Scripts\python.exe -m pip install -r requirements.txt` and `.\.venv\Scripts\python.exe simulation.py` directly. In VS Code or Cursor, open the repository folder and select `.venv\Scripts\python.exe` as the interpreter. On macOS/Linux, use `python3 -m venv .venv`, `source .venv/bin/activate`, then the same `python` commands.
-
-The first run writes `results/simulation_summary.json`, `results/final_portfolio_values.csv`, `results/percentile_paths.csv`, and five PNGs in `results/charts/`. Later unnamed runs use a new UTC timestamped folder under `results/runs/`, so prior results are retained. Results are ignored by Git except for the empty folder marker.
+The first run writes `results/simulation_summary.json`, `results/final_portfolio_values.csv`, `results/percentile_paths.csv`, and five PNGs in `results/charts/`. Later unnamed runs use a new UTC timestamped folder under `results/runs/`, so prior results are retained. Dashboard and CLI outputs follow this same rule. Results are ignored by Git except for the empty folder marker.
 
 ## Run an experiment
 
@@ -75,4 +90,4 @@ GBM assumes normally distributed log returns with fixed return, volatility, and 
 
 ## Code map
 
-`simulation.py` handles the CLI and exports; `src/config.py` validates JSON; `src/engine.py` simulates GBM; `src/portfolio.py` rebalances holdings; `src/analytics.py` computes statistics; `src/visualization.py` saves charts; `tests/` contains pytest checks. The existing MIT license is in `LICENSE`.
+`dashboard.py` runs the local Streamlit interface; `src/dashboard_charts.py` prepares compact Plotly views; `simulation.py` handles the CLI; `src/experiment.py` shares the unchanged export format; `src/config.py` validates JSON; `src/engine.py` simulates GBM and optionally reports real monthly progress; `src/portfolio.py` rebalances holdings; `src/analytics.py` computes statistics; `src/visualization.py` saves PNG charts; `tests/` contains pytest checks. The existing MIT license is in `LICENSE`.
