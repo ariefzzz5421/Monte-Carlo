@@ -1,0 +1,18 @@
+{
+  "bankroll": 10000.0,
+  "position_size": 100.0,
+  "trades": 100,
+  "runs": 10000,
+  "reinvest": false,
+  "ruin_fraction": 0.1,
+  "seed": 42,
+  "model": "hypothetical",
+  "outcomes": [
+    {"label": "Total loss", "realized_multiple": 0.0, "probability": 0.35},
+    {"label": "Partial loss", "realized_multiple": 0.5, "probability": 0.35},
+    {"label": "2x realized", "realized_multiple": 2.0, "probability": 0.22},
+    {"label": "10x realized", "realized_multiple": 10.0, "probability": 0.06},
+    {"label": "50x realized", "realized_multiple": 50.0, "probability": 0.015},
+    {"label": "100x realized", "realized_multiple": 100.0, "probability": 0.005}
+  ]
+}

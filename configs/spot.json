@@ -1,0 +1,17 @@
+{
+  "initial_capital": 10000.0,
+  "assets": ["BTC", "HYPE", "USDT", "XAUT"],
+  "weights": {"BTC": 0.5, "HYPE": 0.2, "USDT": 0.15, "XAUT": 0.15},
+  "years": 5,
+  "runs": 10000,
+  "seed": 42,
+  "rebalancing": "monthly",
+  "method": "gbm",
+  "block_days": 7,
+  "future_assumptions_note": "Hypothetical educational inputs, not historical estimates or forecasts.",
+  "future_expected_returns": {"BTC": 0.08, "HYPE": 0.12, "USDT": 0.0, "XAUT": 0.04},
+  "future_volatility": {"BTC": 0.6, "HYPE": 0.8, "USDT": 0.005, "XAUT": 0.18},
+  "future_correlation": [[1.0, 0.45, 0.0, 0.1], [0.45, 1.0, 0.0, 0.05], [0.0, 0.0, 1.0, 0.0], [0.1, 0.05, 0.0, 1.0]],
+  "stablecoin_depeg": {"enabled": false, "asset": "USDT", "month": 12, "multiplier": 0.8},
+  "crypto_crash": {"enabled": false, "assets": ["BTC", "HYPE"], "month": 12, "multiplier": 0.5}
+}
